@@ -1,29 +1,33 @@
-import * as THREE from 'three';
-import { useState, useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Html } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
+import useClickOutside from './useOutside.jsx';
 
-const Label = ( { distanceFactor, position, name } ) => {
+const Label = ( { distanceFactor, position, name, setHovered, isActive, setActive } ) => {
     const ref = useRef();
+    const [ isOccluded, setOccluded ] = useState( false );
+    useClickOutside(
+        ref, 
+        () => { setActive(false) },
+        () => { setActive(!isActive) }
+    );
 
-    const [isOccluded, setOccluded] = useState();
-
-    return <group ref={ ref } >
-        <Html
-            distanceFactor={ distanceFactor }
-            position={ position }
-            occlude
-            center
-            onOcclude={ setOccluded }
+    return <Html
+        distanceFactor={ distanceFactor }
+        position={ position }
+        occlude
+        center
+        onOcclude={ setOccluded }
+    >
+        <div 
+            ref={ ref }
+            className="label"
+            style={ { transition: 'opacity 0.2s, transform 0.2s', opacity: !isOccluded ? 1 : 0, transform: `scale(${!isOccluded ? 1 : 0.25})` } }
+            onPointerEnter={ () => { setHovered(true) } }
+            onPointerLeave={ () => { setHovered(false) } }
         >
-            <div 
-                className="label"
-                style={ { transition: 'opacity 0.2s, transform 0.2s', opacity: !isOccluded ? 1 : 0, transform: `scale(${!isOccluded ? 1 : 0.25})` } }
-            >
-                { name }
-            </div>
-        </Html>
-    </group> 
+            { name }
+        </div>
+    </Html>
 };
 
 export default Label;
