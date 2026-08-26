@@ -70,6 +70,7 @@ const Experience = () => {
         <Room
             model={ a112.atrium } texture={ flooring }
             lDistanceFactor={ 20 * distanceFactorScale } lPos={ [ 0, 0.2, 0 ] } lName={ 'Atrium' }
+            lDescription={ 'Atrium' }
         />
 
         <mesh 
